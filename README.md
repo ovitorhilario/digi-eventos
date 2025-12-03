@@ -8,7 +8,7 @@ Sistema de gerenciamento de eventos desenvolvido com TypeScript, oferecendo uma 
 
 | Diagrama de Pacotes | Diagrama de Componentes |
 |---------------------|-------------------------|
-| ![Diagrama de Pacotes](docs/diagramas/pacotes.png) | ![Diagrama de Componentes](docs/diagramas/componentes.png) |
+| ![D  Pactotes - UML - DigiEventos](https://github.com/user-attachments/assets/be672d6e-3703-4600-89d5-568c418ca666) | ![D  Components - UML - DigiEventos](https://github.com/user-attachments/assets/1b6e554e-a8ee-4b3d-b399-bd81668aceb6) |
 
 ## Pré-Requisitos
 
