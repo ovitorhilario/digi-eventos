@@ -2,9 +2,7 @@
 
 Sistema de gerenciamento de eventos desenvolvido com TypeScript, oferecendo uma solução completa para organização e controle de eventos.
 
-# Arquitetura
-
-## Diagramas
+## Arquitetura do Sistema
 
 | Diagrama de Pacotes | Diagrama de Componentes |
 |---------------------|-------------------------|
