@@ -1,5 +1,20 @@
 # Digi Eventos
 
+Sistema de gerenciamento de eventos desenvolvido com TypeScript, oferecendo uma solução completa para organização e controle de eventos.
+
+## Pré-Requisitos
+
+Certifique-se de ter as seguintes ferramentas instaladas antes de começar:
+
+- **Docker Desktop** (Windows/Mac) ou **Docker Engine + Docker Compose** (Linux)
+  - [Download Docker Desktop](https://www.docker.com/products/docker-desktop/)
+  - Necessário para executar o banco de dados PostgreSQL e MinIO (armazenamento de arquivos)
+- **Bun** (versão 1.0 ou superior)
+  - [Instalação do Bun](https://bun.sh/docs/installation)
+  - Runtime JavaScript/TypeScript de alto desempenho
+- **Node.js** 18+ (opcional, caso prefira usar npm/pnpm)
+- **Git** para clonar o repositório
+
 ## Recursos
 
 - **TypeScript** - Para segurança de tipos e melhor experiência do desenvolvedor
@@ -12,58 +27,91 @@
 - **PostgreSQL** - Motor de banco de dados
 - **Turborepo** - Sistema de build otimizado para monorepo
 
-## Começando
+## Como Rodar o Projeto
 
-Primeiro, instale as dependências:
+Siga os passos abaixo para configurar e executar o projeto localmente:
+
+### 1. Clone o Repositório
+
+```bash
+git clone https://github.com/ovitorhilario/digi-eventos.git
+cd digi-eventos
+```
+
+### 2. Instale as Dependências
 
 ```bash
 bun install
 ```
 
-## Configuração do Banco de Dados
+Este comando instalará todas as dependências do monorepo (frontend, backend e pacotes compartilhados).
 
-Este projeto usa PostgreSQL com Drizzle ORM.
+### 3. Configure as Variáveis de Ambiente
 
-Para configurar o banco de dados usando Docker:
+Crie os arquivos `.env` necessários baseados nos exemplos fornecidos:
 
-1. Inicie o banco de dados:
+**Backend** (`apps/server/.env`):
+```bash
+# Windows (cmd)
+copy apps\server\.env.example apps\server\.env
+
+# Linux/Mac
+cp apps/server/.env.example apps/server/.env
+```
+
+**Frontend** (`apps/web/.env`):
+```bash
+# Windows (cmd)
+copy apps\web\.env.example apps\web\.env
+
+# Linux/Mac
+cp apps/web/.env.example apps/web/.env
+```
+
+Edite os arquivos `.env` criados com suas configurações locais, se necessário.
+
+### 4. Inicie os Serviços de Infraestrutura
+
+Execute o Docker Compose para iniciar o PostgreSQL e MinIO:
 
 ```bash
 bun db:start
 ```
 
-2. Aplique o esquema ao banco de dados:
+Aguarde alguns segundos para que os containers inicializem completamente.
+
+### 5. Configure o Banco de Dados
+
+Aplique o esquema ao banco de dados:
 
 ```bash
 bun db:push
 ```
 
-3. Semee o banco de dados (opcional):
+(Opcional) Popule o banco com dados de exemplo:
 
 ```bash
 bun db:seed
 ```
 
-4. Para parar o banco de dados:
-
-```bash
-bun db:down
-```
-
-Ou
-
-```bash
-bun db:stop
-```
-
-Em seguida, execute o servidor de desenvolvimento para rodar o sistema:
+### 6. Inicie o Servidor de Desenvolvimento
 
 ```bash
 bun dev
 ```
 
-Abra [http://localhost:3001](http://localhost:3001) no navegador para ver a aplicação web.
-A API está rodando em [http://localhost:3000](http://localhost:3000).
+Este comando iniciará simultaneamente:
+- **Frontend**: [http://localhost:3001](http://localhost:3001)
+- **Backend API**: [http://localhost:3000](http://localhost:3000)
+
+🎉 **Pronto!** O sistema está rodando e pronto para uso.
+
+## Comandos Úteis de Banco de Dados
+
+- **Abrir interface visual do banco**: `bun db:studio`
+- **Parar containers (mantém dados)**: `bun db:stop`
+- **Parar e remover containers**: `bun db:down`
+- **Recriar dados de seed**: `bun db:seed`
 
 ## Estrutura do Projeto
 

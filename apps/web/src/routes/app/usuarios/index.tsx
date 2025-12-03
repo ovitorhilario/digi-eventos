@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useGetUsers, useDeleteUsersById } from '@/http/gen'
+import { useGetUsers, useDeleteUsersById, getUsersQueryKey } from '@/http/gen'
 import type { GetUsers200 } from '@/http/gen'
 import {
   Table,
@@ -47,6 +47,8 @@ function RouteComponent() {
           title: 'Usuário deletado',
           description: 'O usuário foi deletado com sucesso.'
         })
+
+        queryClient.refetchQueries({ queryKey: getUsersQueryKey() })
       },
       onError: (error) => {
         const message = (error.response?.data as any)?.message || 'Ocorreu um erro ao tentar deletar o usuário.'
@@ -183,7 +185,7 @@ function RouteComponent() {
             </TableBody>
             <TableFooter>
               <TableRow>
-                <TableCell colSpan={3}>Número de usuáruis</TableCell>
+                <TableCell colSpan={3}>Número de usuários</TableCell>
                 <TableCell className="text-right font-medium">{users?.length ?? 0}</TableCell>
               </TableRow>
             </TableFooter>

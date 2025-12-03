@@ -55,7 +55,7 @@ function RootComponent() {
 					</div>
 				</ToastProvider>
 			</ThemeProvider>
-			<TanStackRouterDevtools position="bottom-left  />
+			<TanStackRouterDevtools position="bottom-left"  />
 		</>
 	);
 }

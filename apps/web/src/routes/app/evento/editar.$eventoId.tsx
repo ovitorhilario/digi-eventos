@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
 import { getEventsByIdQueryKey, getEventsQueryKey, useGetEventsById, usePutEventsById, type PutEventsByIdMutationRequest } from '@/http/gen'
 import { Input } from '@/components/ui/input'
@@ -39,7 +39,7 @@ export const Route = createFileRoute('/app/evento/editar/$eventoId')({
 })
 
 function EditarEventoComponent() {
-  const navigate = useNavigate()
+  const router = useRouter()
   const { eventoId } = Route.useParams()
   const { data: event, isLoading } = useGetEventsById(eventoId)
   const updateEventMutation = usePutEventsById()
@@ -144,7 +144,7 @@ function EditarEventoComponent() {
           })
         ])
 
-        navigate({ to: '/evento/$eventoId', params: { eventoId } })
+        router.history.back();
       } catch (error) {
         toastManager.add({
           type: 'error',
