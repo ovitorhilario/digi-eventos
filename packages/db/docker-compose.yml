@@ -1,0 +1,58 @@
+name: digi-eventos
+
+services:
+  postgres:
+    image: postgres
+    container_name: digi-eventos-postgres
+    environment:
+      POSTGRES_DB: digi-eventos
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "8081:5432"
+    volumes:
+      - digi-eventos_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  minio:
+    image: minio/minio
+    container_name: digi-eventos-minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - digi-eventos_minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  minio-init:
+    image: minio/mc
+    container_name: digi-eventos-minio-init
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set minio http://minio:9000 minioadmin minioadmin;
+      mc mb minio/digi-eventos --ignore-existing;
+      mc anonymous set download minio/digi-eventos;
+      exit 0;
+      "
+    restart: "no"
+
+volumes:
+  digi-eventos_postgres_data:
+  digi-eventos_minio_data:

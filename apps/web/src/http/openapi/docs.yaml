@@ -1,0 +1,1790 @@
+openapi: 3.0.3
+info:
+  title: Digi Eventos API
+  description: Development documentation
+  version: 1.0.0
+paths:
+  /auth/login:
+    post:
+      parameters:
+        - name: refreshToken
+          in: cookie
+          required: false
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  format: email
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  format: email
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                email:
+                  format: email
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        "200":
+          description: Response for status 200
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      email:
+                        type: string
+                      name:
+                        type: string
+                      role:
+                        type: string
+                      avatarUrl:
+                        anyOf:
+                          - type: string
+                          - type: "null"
+                    required:
+                      - id
+                      - email
+                      - name
+                      - role
+                  accessToken:
+                    type: string
+                required:
+                  - user
+                  - accessToken
+        "401":
+          description: Response for status 401
+          content:
+            text/plain:
+              schema:
+                const: Email ou senha inválidos
+                type: string
+      operationId: postAuthLogin
+  /auth/me:
+    get:
+      parameters:
+        - name: refreshToken
+          in: cookie
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Response for status 200
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      email:
+                        type: string
+                      name:
+                        type: string
+                      role:
+                        type: string
+                      avatarUrl:
+                        anyOf:
+                          - type: string
+                          - type: "null"
+                    required:
+                      - id
+                      - email
+                      - name
+                      - role
+                  accessToken:
+                    type: string
+                required:
+                  - user
+                  - accessToken
+                additionalProperties: false
+        "404":
+          description: Response for status 404
+          content:
+            text/plain:
+              schema:
+                const: Usuário não encontrado
+                type: string
+      operationId: getAuthMe
+  /auth/logout:
+    post:
+      parameters:
+        - name: refreshToken
+          in: cookie
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Response for status 200
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+      operationId: postAuthLogout
+  /events/:
+    get:
+      responses:
+        "200":
+          description: Response for status 200
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - id
+                    - title
+                    - description
+                    - location
+                    - startTime
+                    - finishTime
+                    - maxCapacity
+                    - imageUrl
+                    - createdBy
+                    - createdAt
+                    - updatedAt
+                    - cancelledAt
+                    - categories
+                    - participantCount
+                    - participants
+                  additionalProperties: false
+                  properties:
+                    id:
+                      type: string
+                    title:
+                      type: string
+                    description:
+                      anyOf:
+                        - type: string
+                        - type: "null"
+                    location:
+                      anyOf:
+                        - type: string
+                        - type: "null"
+                    startTime:
+                      type: string
+                    finishTime:
+                      anyOf:
+                        - type: string
+                        - type: "null"
+                    maxCapacity:
+                      anyOf:
+                        - type: number
+                        - type: "null"
+                    imageUrl:
+                      anyOf:
+                        - type: string
+                        - type: "null"
+                    createdBy:
+                      type: string
+                    createdAt:
+                      type: string
+                    updatedAt:
+                      type: string
+                    cancelledAt:
+                      anyOf:
+                        - type: string
+                        - type: "null"
+                    categories:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          title:
+                            type: string
+                          description:
+                            anyOf:
+                              - type: string
+                              - type: "null"
+                        required:
+                          - id
+                          - title
+                          - description
+                    participantCount:
+                      type: number
+                    participants:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          userId:
+                            type: string
+                          registeredAt:
+                            type: string
+                          user:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              name:
+                                type: string
+                              email:
+                                type: string
+                              avatarUrl:
+                                anyOf:
+                                  - type: string
+                                  - type: "null"
+                            required:
+                              - id
+                              - name
+                              - email
+                              - avatarUrl
+                        required:
+                          - id
+                          - userId
+                          - registeredAt
+                          - user
+      operationId: getEvents
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+                location:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+                startTime:
+                  type: string
+                finishTime:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+                maxCapacity:
+                  anyOf:
+                    - type: number
+                    - type: "null"
+                image:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+                categoryIds:
+                  type: array
+                  items:
+                    type: string
+              required:
+                - title
+                - description
+                - location
+                - startTime
+                - finishTime
+                - maxCapacity
+                - image
+                - categoryIds
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+                location:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+                startTime:
+                  type: string
+                finishTime:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+                maxCapacity:
+                  anyOf:
+                    - type: number
+                    - type: "null"
+                image:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+                categoryIds:
+                  type: array
+                  items:
+                    type: string
+              required:
+                - title
+                - description
+                - location
+                - startTime
+                - finishTime
+                - maxCapacity
+                - image
+                - categoryIds
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+                location:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+                startTime:
+                  type: string
+                finishTime:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+                maxCapacity:
+                  anyOf:
+                    - type: number
+                    - type: "null"
+                image:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+                categoryIds:
+                  type: array
+                  items:
+                    type: string
+              required:
+                - title
+                - description
+                - location
+                - startTime
+                - finishTime
+                - maxCapacity
+                - image
+                - categoryIds
+      responses:
+        "200":
+          description: Response for status 200
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  description:
+                    anyOf:
+                      - type: string
+                      - type: "null"
+                  location:
+                    anyOf:
+                      - type: string
+                      - type: "null"
+                  startTime:
+                    type: string
+                  finishTime:
+                    anyOf:
+                      - type: string
+                      - type: "null"
+                  maxCapacity:
+                    anyOf:
+                      - type: number
+                      - type: "null"
+                  imageUrl:
+                    anyOf:
+                      - type: string
+                      - type: "null"
+                  createdBy:
+                    type: string
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  cancelledAt:
+                    type: "null"
+                  categories:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        title:
+                          type: string
+                        description:
+                          anyOf:
+                            - type: string
+                            - type: "null"
+                      required:
+                        - id
+                        - title
+                        - description
+                required:
+                  - id
+                  - title
+                  - description
+                  - location
+                  - startTime
+                  - finishTime
+                  - maxCapacity
+                  - imageUrl
+                  - createdBy
+                  - createdAt
+                  - updatedAt
+                  - cancelledAt
+                  - categories
+      operationId: postEvents
+  /events/{id}:
+    get:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Response for status 200
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  description:
+                    anyOf:
+                      - type: string
+                      - type: "null"
+                  location:
+                    anyOf:
+                      - type: string
+                      - type: "null"
+                  startTime:
+                    type: string
+                  finishTime:
+                    anyOf:
+                      - type: string
+                      - type: "null"
+                  maxCapacity:
+                    anyOf:
+                      - type: number
+                      - type: "null"
+                  imageUrl:
+                    anyOf:
+                      - type: string
+                      - type: "null"
+                  createdBy:
+                    type: string
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  cancelledAt:
+                    anyOf:
+                      - type: string
+                      - type: "null"
+                  categories:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        title:
+                          type: string
+                        description:
+                          anyOf:
+                            - type: string
+                            - type: "null"
+                      required:
+                        - id
+                        - title
+                        - description
+                  participants:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        userId:
+                          type: string
+                        registeredAt:
+                          type: string
+                        user:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            name:
+                              type: string
+                            email:
+                              type: string
+                            avatarUrl:
+                              anyOf:
+                                - type: string
+                                - type: "null"
+                          required:
+                            - id
+                            - name
+                            - email
+                            - avatarUrl
+                      required:
+                        - id
+                        - userId
+                        - registeredAt
+                        - user
+                  participantCount:
+                    type: number
+                required:
+                  - id
+                  - title
+                  - description
+                  - location
+                  - startTime
+                  - finishTime
+                  - maxCapacity
+                  - imageUrl
+                  - createdBy
+                  - createdAt
+                  - updatedAt
+                  - cancelledAt
+                  - categories
+                  - participants
+                  - participantCount
+        "404":
+          description: Response for status 404
+          content:
+            text/plain:
+              schema:
+                const: Evento não encontrado
+                type: string
+      operationId: getEventsById
+    put:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+                location:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+                startTime:
+                  type: string
+                finishTime:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+                maxCapacity:
+                  anyOf:
+                    - type: number
+                    - type: "null"
+                image:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+                categoryIds:
+                  type: array
+                  items:
+                    type: string
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+                location:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+                startTime:
+                  type: string
+                finishTime:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+                maxCapacity:
+                  anyOf:
+                    - type: number
+                    - type: "null"
+                image:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+                categoryIds:
+                  type: array
+                  items:
+                    type: string
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+                location:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+                startTime:
+                  type: string
+                finishTime:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+                maxCapacity:
+                  anyOf:
+                    - type: number
+                    - type: "null"
+                image:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+                categoryIds:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: Response for status 200
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  description:
+                    anyOf:
+                      - type: string
+                      - type: "null"
+                  location:
+                    anyOf:
+                      - type: string
+                      - type: "null"
+                  startTime:
+                    type: string
+                  finishTime:
+                    anyOf:
+                      - type: string
+                      - type: "null"
+                  maxCapacity:
+                    anyOf:
+                      - type: number
+                      - type: "null"
+                  imageUrl:
+                    anyOf:
+                      - type: string
+                      - type: "null"
+                  createdBy:
+                    type: string
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                  cancelledAt:
+                    anyOf:
+                      - type: string
+                      - type: "null"
+                  categories:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        title:
+                          type: string
+                        description:
+                          anyOf:
+                            - type: string
+                            - type: "null"
+                      required:
+                        - id
+                        - title
+                        - description
+                required:
+                  - id
+                  - title
+                  - description
+                  - location
+                  - startTime
+                  - finishTime
+                  - maxCapacity
+                  - imageUrl
+                  - createdBy
+                  - createdAt
+                  - updatedAt
+                  - cancelledAt
+                  - categories
+      operationId: putEventsById
+    delete:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Response for status 200
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "404":
+          description: Response for status 404
+          content:
+            text/plain:
+              schema:
+                const: Evento não encontrado
+                type: string
+      operationId: deleteEventsById
+  /registrations/:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                eventId:
+                  type: string
+              required:
+                - eventId
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                eventId:
+                  type: string
+              required:
+                - eventId
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                eventId:
+                  type: string
+              required:
+                - eventId
+      responses:
+        "200":
+          description: Response for status 200
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  userId:
+                    type: string
+                  eventId:
+                    type: string
+                  registeredAt:
+                    type: string
+                  cancelledParticipation:
+                    type: boolean
+                  cancelledAt:
+                    anyOf:
+                      - type: string
+                      - type: "null"
+                  event:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      title:
+                        type: string
+                      description:
+                        anyOf:
+                          - type: string
+                          - type: "null"
+                      location:
+                        anyOf:
+                          - type: string
+                          - type: "null"
+                      startTime:
+                        type: string
+                      finishTime:
+                        anyOf:
+                          - type: string
+                          - type: "null"
+                      maxCapacity:
+                        anyOf:
+                          - type: number
+                          - type: "null"
+                    required:
+                      - id
+                      - title
+                      - description
+                      - location
+                      - startTime
+                      - finishTime
+                      - maxCapacity
+                required:
+                  - id
+                  - userId
+                  - eventId
+                  - registeredAt
+                  - cancelledParticipation
+                  - cancelledAt
+                  - event
+        "400":
+          description: Response for status 400
+          content:
+            text/plain:
+              schema:
+                type: string
+                enum:
+                  - Já inscrito neste evento
+                  - Evento lotado
+        "404":
+          description: Response for status 404
+          content:
+            text/plain:
+              schema:
+                const: Evento não encontrado
+                type: string
+      operationId: postRegistrations
+    get:
+      responses:
+        "200":
+          description: Response for status 200
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - id
+                    - userId
+                    - eventId
+                    - registeredAt
+                    - cancelledParticipation
+                    - cancelledAt
+                    - event
+                  additionalProperties: false
+                  properties:
+                    id:
+                      type: string
+                    userId:
+                      type: string
+                    eventId:
+                      type: string
+                    registeredAt:
+                      type: string
+                    cancelledParticipation:
+                      type: boolean
+                    cancelledAt:
+                      anyOf:
+                        - type: string
+                        - type: "null"
+                    event:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        title:
+                          type: string
+                        description:
+                          anyOf:
+                            - type: string
+                            - type: "null"
+                        location:
+                          anyOf:
+                            - type: string
+                            - type: "null"
+                        startTime:
+                          type: string
+                        finishTime:
+                          anyOf:
+                            - type: string
+                            - type: "null"
+                        maxCapacity:
+                          anyOf:
+                            - type: number
+                            - type: "null"
+                      required:
+                        - id
+                        - title
+                        - description
+                        - location
+                        - startTime
+                        - finishTime
+                        - maxCapacity
+      operationId: getRegistrations
+  /registrations/{id}:
+    delete:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Response for status 200
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    const: Inscrição cancelada com sucesso
+                    type: string
+                required:
+                  - message
+        "404":
+          description: Response for status 404
+          content:
+            text/plain:
+              schema:
+                const: Inscrição não encontrada
+                type: string
+      operationId: deleteRegistrationsById
+  /users/:
+    get:
+      tags:
+        - Users
+      summary: Get all users
+      description: Get all users (admin/owner only)
+      responses:
+        "200":
+          description: Response for status 200
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    email:
+                      type: string
+                    role:
+                      type: string
+                    avatarUrl:
+                      anyOf:
+                        - type: string
+                        - type: "null"
+                  required:
+                    - id
+                    - name
+                    - email
+                    - role
+      operationId: getUsers
+    post:
+      tags:
+        - Users
+      summary: Create user
+      description: Create a new user (admin/owner only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                name:
+                  type: string
+                password:
+                  type: string
+                role:
+                  type: string
+                  enum:
+                    - user
+                    - admin
+                    - owner
+                avatar:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+              required:
+                - email
+                - name
+                - password
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                name:
+                  type: string
+                password:
+                  type: string
+                role:
+                  type: string
+                  enum:
+                    - user
+                    - admin
+                    - owner
+                avatar:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+              required:
+                - email
+                - name
+                - password
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                name:
+                  type: string
+                password:
+                  type: string
+                role:
+                  type: string
+                  enum:
+                    - user
+                    - admin
+                    - owner
+                avatar:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+              required:
+                - email
+                - name
+                - password
+      responses:
+        "200":
+          description: Response for status 200
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  role:
+                    type: string
+                  avatarUrl:
+                    anyOf:
+                      - type: string
+                      - type: "null"
+                required:
+                  - id
+                  - name
+                  - email
+                  - role
+        "400":
+          description: Response for status 400
+          content:
+            text/plain:
+              schema:
+                const: Dados de validação inválidos
+                type: string
+      operationId: postUsers
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Get user profile
+      description: Get user profile by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Response for status 200
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  role:
+                    type: string
+                  avatarUrl:
+                    anyOf:
+                      - type: string
+                      - type: "null"
+                required:
+                  - id
+                  - name
+                  - email
+                  - role
+        "404":
+          description: Response for status 404
+          content:
+            text/plain:
+              schema:
+                const: Usuário não encontrado
+                type: string
+      operationId: getUsersById
+    put:
+      tags:
+        - Users
+      summary: Update user profile
+      description: Update user profile by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                avatar:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                avatar:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                avatar:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+      responses:
+        "200":
+          description: Response for status 200
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  role:
+                    type: string
+                  avatarUrl:
+                    anyOf:
+                      - type: string
+                      - type: "null"
+                required:
+                  - id
+                  - name
+                  - email
+                  - role
+        "400":
+          description: Response for status 400
+          content:
+            text/plain:
+              schema:
+                const: Dados de validação inválidos
+                type: string
+        "404":
+          description: Response for status 404
+          content:
+            text/plain:
+              schema:
+                const: Usuário não encontrado
+                type: string
+      operationId: putUsersById
+    delete:
+      tags:
+        - Users
+      summary: Delete user
+      description: Delete a user by ID (admin/owner only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Response for status 200
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "404":
+          description: Response for status 404
+          content:
+            text/plain:
+              schema:
+                const: Usuário não encontrado
+                type: string
+      operationId: deleteUsersById
+  /users/{id}/password:
+    put:
+      tags:
+        - Users
+      summary: Change user password
+      description: Change user password (user must provide current password)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                currentPassword:
+                  type: string
+                newPassword:
+                  type: string
+                confirmPassword:
+                  type: string
+              required:
+                - currentPassword
+                - newPassword
+                - confirmPassword
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                currentPassword:
+                  type: string
+                newPassword:
+                  type: string
+                confirmPassword:
+                  type: string
+              required:
+                - currentPassword
+                - newPassword
+                - confirmPassword
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                currentPassword:
+                  type: string
+                newPassword:
+                  type: string
+                confirmPassword:
+                  type: string
+              required:
+                - currentPassword
+                - newPassword
+                - confirmPassword
+      responses:
+        "200":
+          description: Response for status 200
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "400":
+          description: Response for status 400
+          content:
+            text/plain:
+              schema:
+                const: Dados de validação inválidos
+                type: string
+        "403":
+          description: Response for status 403
+          content:
+            text/plain:
+              schema:
+                const: Você não tem permissão para alterar esta senha
+                type: string
+        "404":
+          description: Response for status 404
+          content:
+            text/plain:
+              schema:
+                const: Usuário não encontrado
+                type: string
+      operationId: putUsersByIdPassword
+  /users/{id}/admin-password:
+    put:
+      tags:
+        - Users
+      summary: Change user password (admin/owner)
+      description: Change user password without current password verification
+        (admin/owner only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newPassword:
+                  type: string
+                confirmPassword:
+                  type: string
+              required:
+                - newPassword
+                - confirmPassword
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                newPassword:
+                  type: string
+                confirmPassword:
+                  type: string
+              required:
+                - newPassword
+                - confirmPassword
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                newPassword:
+                  type: string
+                confirmPassword:
+                  type: string
+              required:
+                - newPassword
+                - confirmPassword
+      responses:
+        "200":
+          description: Response for status 200
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "400":
+          description: Response for status 400
+          content:
+            text/plain:
+              schema:
+                const: Dados de validação inválidos
+                type: string
+        "403":
+          description: Response for status 403
+          content:
+            text/plain:
+              schema:
+                const: Apenas owners e administradores podem alterar senhas sem confirmação
+                type: string
+        "404":
+          description: Response for status 404
+          content:
+            text/plain:
+              schema:
+                const: Usuário não encontrado
+                type: string
+      operationId: putUsersByIdAdmin-password
+  /categories/:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  minLength: 1
+                  type: string
+                description:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+              required:
+                - title
+                - description
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                title:
+                  minLength: 1
+                  type: string
+                description:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+              required:
+                - title
+                - description
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  minLength: 1
+                  type: string
+                description:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+              required:
+                - title
+                - description
+      responses:
+        "200":
+          description: Response for status 200
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  description:
+                    anyOf:
+                      - type: string
+                      - type: "null"
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                required:
+                  - id
+                  - title
+                  - description
+                  - createdAt
+                  - updatedAt
+        "400":
+          description: Response for status 400
+          content:
+            text/plain:
+              schema:
+                const: Título da categoria já existe
+                type: string
+      operationId: postCategories
+    get:
+      responses:
+        "200":
+          description: Response for status 200
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    title:
+                      type: string
+                    description:
+                      anyOf:
+                        - type: string
+                        - type: "null"
+                    createdAt:
+                      type: string
+                    updatedAt:
+                      type: string
+                  required:
+                    - id
+                    - title
+                    - description
+                    - createdAt
+                    - updatedAt
+      operationId: getCategories
+  /categories/{id}:
+    get:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Response for status 200
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  description:
+                    anyOf:
+                      - type: string
+                      - type: "null"
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                required:
+                  - id
+                  - title
+                  - description
+                  - createdAt
+                  - updatedAt
+        "404":
+          description: Response for status 404
+          content:
+            text/plain:
+              schema:
+                const: Categoria não encontrada
+                type: string
+      operationId: getCategoriesById
+    put:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  anyOf:
+                    - minLength: 1
+                      type: string
+                    - type: "null"
+                description:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+              required:
+                - title
+                - description
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                title:
+                  anyOf:
+                    - minLength: 1
+                      type: string
+                    - type: "null"
+                description:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+              required:
+                - title
+                - description
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  anyOf:
+                    - minLength: 1
+                      type: string
+                    - type: "null"
+                description:
+                  anyOf:
+                    - type: string
+                    - type: "null"
+              required:
+                - title
+                - description
+      responses:
+        "200":
+          description: Response for status 200
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  description:
+                    anyOf:
+                      - type: string
+                      - type: "null"
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+                required:
+                  - id
+                  - title
+                  - description
+                  - createdAt
+                  - updatedAt
+        "400":
+          description: Response for status 400
+          content:
+            text/plain:
+              schema:
+                const: Categoria não encontrada ou título já existe
+                type: string
+      operationId: putCategoriesById
+    delete:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Response for status 200
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "404":
+          description: Response for status 404
+          content:
+            text/plain:
+              schema:
+                const: Categoria não encontrada
+                type: string
+      operationId: deleteCategoriesById
+components:
+  schemas: {}
