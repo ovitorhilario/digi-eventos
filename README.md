@@ -2,6 +2,14 @@
 
 Sistema de gerenciamento de eventos desenvolvido com TypeScript, oferecendo uma solução completa para organização e controle de eventos.
 
+# Arquitetura
+
+## Diagramas
+
+| Diagrama de Pacotes | Diagrama de Componentes |
+|---------------------|-------------------------|
+| ![Diagrama de Pacotes](docs/diagramas/pacotes.png) | ![Diagrama de Componentes](docs/diagramas/componentes.png) |
+
 ## Pré-Requisitos
 
 Certifique-se de ter as seguintes ferramentas instaladas antes de começar:
